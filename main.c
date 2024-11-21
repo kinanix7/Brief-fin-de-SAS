@@ -6,14 +6,13 @@ struct Tache {
      char description[100];
      char dataEcheance[10];//Format : dd/mm/yyyy
      char priorite[10];// low,high
-     char 
 
 };
     //Table stock des tâches
 struct Tache listTaches[100];
 int nombreTaches = 0;
-// Functions Ajouter une tache
-void AjouterTache() {
+// Functions ajouter une tache
+void ajouterTache() {
     if (nombreTaches >= 100) {
         printf("La liste des taches est pleine.\n");
         return;
@@ -33,7 +32,7 @@ void AjouterTache() {
 
 }
 
-void AfficherTaches() {
+void afficherTaches() {
     if (nombreTaches == 0) {
         printf("Aucune tache a afficher .\n");
         return;
@@ -48,11 +47,40 @@ void AfficherTaches() {
 
 
   }
-  
-    
+}
+void modifierTache() {
+    int index;
+    printf("Entrez le numero de la tache a modifier (1-%d): ", nombreTaches);
+    scanf("%d",&index);
+
+
+    if (index < 1 || index > nombreTaches){
+
+        printf("Numero de tache invalide !!!.\n");
+        return;
+
+    }
+
+    index--;
+
+    printf("Entrez le nouveau title de la tache : ");
+    scanf(" %[^\n]", listTaches[index].title);
+    printf("Entrez la nouvelle description de la tache : ");
+    scanf(" %[^\n]", listTaches[index].description);
+    printf("Entrez la nouvelle date de fin de la tache (DD/MM/YYYY) : ");
+    scanf("%s", listTaches[index].dataEcheance);
+    printf("Entrez la nouvelle priorite de la tache (High/Low) : ");
+    scanf("%s", listTaches[index].priorite);
+
+    printf("Tache modifiee avec succes.\n");
+
 }
 
 
 int main(){
-
+    ajouterTache();
+    afficherTaches();
+    modifierTache();
+    afficherTaches();
+    return 0;
 }
