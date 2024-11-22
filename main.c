@@ -30,6 +30,7 @@ void ajouterTache() {
     scanf(" %s", listTaches[nombreTaches].dataEcheance);
 
     printf("Entrez la priorite de la tache (1. High / 2. Low) : ");
+    
     int choixPriorite;
     scanf("%d", &choixPriorite);
 
@@ -47,6 +48,9 @@ void ajouterTache() {
     printf("Tache ajoutee avec succes.\n");
 }
 
+
+
+
 // Fonction pour afficher les tâches
 void afficherTaches() {
     if (nombreTaches == 0) {
@@ -62,6 +66,9 @@ void afficherTaches() {
         printf("Priorite    : %s\n", listTaches[i].priorite);
     }
 }
+
+
+
 
 // Fonction pour modifier une tâche
 void modifierTache() {
@@ -123,6 +130,52 @@ void supprimerTache() {
     printf("Tache supprimee avec succes.\n");
 }
 
+
+// Fonction pour flier une tâche
+void filtrerTahches() {
+    
+    if (nombreTaches == 0) {
+        printf("Aucune tache a afficher .\n");
+        return;
+
+    }
+    printf("Entrez la priorite a afficher (1. High / 2. Low ): ");
+    int choixPriorite;
+    scanf("%d",&choixPriorite);
+
+    char prioriteFiltre[10];
+    if (choixPriorite == 1) {
+        strcpy(prioriteFiltre, "High");
+    } else if (choixPriorite == 2) {
+        strcpy(prioriteFiltre,"Low");
+    } else {
+        printf("Choix invalide. Retour au menu principal.\n ");
+        return;
+    }
+
+    printf("\nTaches avec priorite '%s' :\n", prioriteFiltre);
+    int found = 0;
+    for (int i = 0; i < nombreTaches; i++) {
+
+
+        if (strcmp(listTaches[i].priorite , prioriteFiltre) == 0) {
+            printf("\nTache %d :\n", i + 1);    
+            printf("Titre       : %s\n", listTaches[i].title);
+            printf("Description : %s\n", listTaches[i].description);
+            printf("Echeance    : %s\n", listTaches[i].dataEcheance);
+            found = 1;
+
+
+        }
+        
+      
+    }
+
+    if (!found) {
+        printf("Aucune tache avec la priorite  trouvee.\n");
+}
+}
+
 // Fonction principale
 int main() {
     int choix;
@@ -133,7 +186,8 @@ int main() {
         printf("2. Afficher toutes les taches\n");
         printf("3. Modifier une tache\n");
         printf("4. Supprimer une tache\n");
-        printf("5. Quitter\n");
+        printf("5. Filtrer les taches par priorite\n");
+        printf("6. Quitter\n");
         printf("Entrez votre choix : ");
         scanf("%d", &choix);
 
@@ -151,6 +205,9 @@ int main() {
                 supprimerTache();
                 break;
             case 5:
+                filtrerTahches();
+                break;
+            case 6:
                 printf("Au revoir !\n");
                 break;
             default:
