@@ -1,149 +1,101 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_TACHES 100
 struct Tache {
+    int id;
     char title[50];
     char description[100];
     char dataEcheance[11]; // Format : DD-MM-YYYY
     char priorite[10];     // high or low
-    char statue[10];   // complete or incompelte
+    char statue[10];       // complete or incomplete
 };
-struct Tache listTaches[100];
-int nombreTaches = 0;
 
-// Fonction pour ajouter une tâche
-void ajouterTache() {
-    
+int numbreTaches = 0;
+
+void AjouterTache(struct Tache *list_tache, int id) {
+    list_tache->id = id;
     printf("Entrez le titre de la tache : ");
-    scanf(" %[^\n]", listTaches[nombreTaches].title);
+    scanf(" %[^\n]", list_tache->title);
     printf("Entrez la description de la tache : ");
-    scanf(" %[^\n]", listTaches[nombreTaches].description);
-    printf("Entrez la date de fin de la tache (DD/MM/YYYY) : ");
-    scanf(" %s", listTaches[nombreTaches].dataEcheance);
-    printf("Entrez la priorite de la tache high-low : ");
-    scanf(" %s", listTaches[nombreTaches].priorite);
-    printf("Entrez la statue de la thache compelete-incomplete : ");
-    scanf("%s",listTaches[nombreTaches].statue);
-    nombreTaches++;// Convertir en index 0-based
+    scanf(" %[^\n]", list_tache->description);
+    printf("Entrez la date de la tache (DD/MM/YYYY) : ");
+    scanf(" %s", list_tache->dataEcheance);
 
-    printf("Tache ajoutee avec succes.\n");
+    while (1) { // Infinite loop for priority validation
+        printf("Entrez la priorite de la tache (high/low) : ");
+        scanf(" %s", list_tache->priorite);
+        if (strcmp(list_tache->priorite, "high") == 0 || strcmp(list_tache->priorite, "low") == 0) {
+            break; 
+        } else {
+            printf("Priorite invalide. Veuillez saisir 'high' ou 'low'.\n");
+        }
+    }
+    printf("Entrez la statue de la tache (complete/incomplete) : ");
+    scanf(" %s", list_tache->statue);
 }
 
-
-// Fonction pour afficher les tâches
-void afficherTaches() {
-
- for (int i = 0; i < nombreTaches; i++) {
-        printf("\nTache %d :\n", i + 1);
-        printf("Titre       : %s\n", listTaches[i].title);
-        printf("Description : %s\n", listTaches[i].description);
-        printf("Echeance    : %s\n", listTaches[i].dataEcheance);
-        printf("Priorite    : %s\n", listTaches[i].priorite);
-        printf("Statue      : %s\n", listTaches[i].statue);
+void AfficherTache(struct Tache list_tache) {
+    if (list_tache.id != 0) { // Check if task is valid
+        printf("---------------------------------------------------------\n");
+        printf("Id : %d\nTitre : %s\nDescription : %s\nDataEcheance : %s\nPriorite : %s\nStatut : %s\n",
+               list_tache.id, list_tache.title, list_tache.description, 
+               list_tache.dataEcheance, list_tache.priorite, list_tache.statue);
+        printf("---------------------------------------------------------\n");
     }
 }
 
-
-
-
-// Fonction pour modifier une tâche
-void modifierTache() {
-    int index;
-    printf("Entrez le numero de la tâche a modifier (1-%d) : ", nombreTaches);
-    scanf("%d", &index);
-
-    if (index < 1 || index > nombreTaches) {
-        printf("Numero de tache invalide !\n");
-        return;
+void ModifierTache(struct Tache *list_tache, char new_value[], int field) {
+    switch (field) {
+        case 1:
+            strcpy(list_tache->title, new_value);
+            break;
+        case 2:
+            strcpy(list_tache->description, new_value);
+            break;
+        case 3:
+            strcpy(list_tache->dataEcheance, new_value);
+            break;
+        case 4:
+            strcpy(list_tache->priorite, new_value);
+            break;
+        case 5:
+            strcpy(list_tache->statue, new_value);
+            break;
+        default:
+            printf("Invalid field.\n");
+            break;
     }
-
-    index--; // Convertir en index 0-based
-
-    printf("Entrez le nouveau titre de la tache : ");
-    scanf(" %s", listTaches[index].title);
-    printf("Entrez la nouvelle description de la tache : ");
-    scanf(" %s", listTaches[index].description);
-    printf("Entrez la nouvelle date de fin de la tache DD-MM-YYYY : ");
-    scanf(" %s", listTaches[index].dataEcheance);
-    printf("Entrez la nouvelle priorite high-low: ");
-    scanf("%s", listTaches[index].priorite);
-    printf("Entrez la nouvelle statue compelete-incomplete : ");
-    scanf("%s", listTaches[index].statue)
-    printf("Tache modifiee avec succes.\n");
 }
 
-// Fonction pour supprimer une tâche
-void supprimerTache() {
-    int index;
-
-    printf("Entrez le numero de la tache à supprimer (1-%d) : ", nombreTaches);
-    scanf("%d", &index);
-
-    if (index < 1 || index > nombreTaches) {
-        printf("Numero de tache invalide !\n");
-        return;
-    }
-
-    index--; // Convertir en index 0-based
-
-    for (int i = index; i < nombreTaches - 1; i++) {
-        listTaches[i] = listTaches[i + 1];
-    }
-
-    nombreTaches--;
-    printf("Tache supprimee avec succes.\n");
+void SupprimerTache(struct Tache *list_tache) {
+    list_tache->id = 0; // Mark task as deleted
 }
 
-
-// Fonction pour flier une tâche
-void filtrerTahches() {
-    
-    if (nombreTaches == 0) {
-        printf("Aucune tache a afficher .\n");
-        return;
-
-    }
-    printf("Entrez la priorite a afficher (1. High / 2. Low ): ");
-    int choixPriorite;
-    scanf("%d",&choixPriorite);
-
-    char prioriteFiltre[10];
-    if (choixPriorite == 1) {
-        strcpy(prioriteFiltre, "High");
-    } else if (choixPriorite == 2) {
-        strcpy(prioriteFiltre,"Low");
-    } else {
-        printf("Choix invalide. Retour au menu principal.\n ");
-        return;
-    }
-
-    printf("\nTaches avec priorite '%s' :\n", prioriteFiltre);
+void FiltrerTaches(struct Tache list_tache[], int id , char filter_Priority[]) {
     int found = 0;
-    for (int i = 0; i < nombreTaches; i++) {
-
-
-        if (strcmp(listTaches[i].priorite , prioriteFiltre) == 0) {
-            printf("\nTache %d :\n", i + 1);    
-            printf("Titre       : %s\n", listTaches[i].title);
-            printf("Description : %s\n", listTaches[i].description);
-            printf("Echeance    : %s\n", listTaches[i].dataEcheance);
+    for (int i = 0; i < id; i++)
+    {
+        if (strcmp(list_tache[i].priorite , filter_Priority) == 0)
+        {
+            AfficherTache(list_tache[i]);
             found = 1;
-
-
         }
         
-      
+    }if (!found)
+    {
+       printf("Note found");
     }
-
-    if (!found) {
-        printf("Aucune tache avec la priorite  trouvee.\n");
+    
+    
 }
-}
-
-// Fonction principale
 int main() {
+    struct Tache list_tache[MAX_TACHES];
     int choix;
-     do {
+    int id = 0, id_modifier, id_supprimer, field;
+    char new_value[100], filter_Priority[100];
+
+    do {
         printf("\nMenu :\n");
         printf("1. Ajouter\n");
         printf("2. Afficher\n");
@@ -155,15 +107,59 @@ int main() {
         scanf("%d", &choix);
 
         switch (choix) {
-            case 1:ajouterTache();break;
-            case 2:afficherTaches(); break;
-            case 3:modifierTache();break;
-            case 4:supprimerTache();break;
-            case 5:filtrerTahches();break;
-            case 6:printf("Au revoir !\n");break;
-           default:
+            case 1:
+                if (id < MAX_TACHES) {
+                    AjouterTache(&list_tache[id], id + 1);
+                    id++;
+                } else {
+                    printf("Nombre maximum de taches atteint.\n");
+                }
+                break;
+            case 2:
+                for (int i = 0; i < id; i++) {
+                    if (list_tache[i].id != 0) { // Display only valid tasks
+                        AfficherTache(list_tache[i]);
+                    }
+                }
+                break;
+            case 3:
+                printf("Entrez l'id de la tache a modifier : ");
+                scanf("%d", &id_modifier);
+                if (id_modifier > 0 && id_modifier <= id && list_tache[id_modifier - 1].id != 0) {
+                    printf("1. Titre\n2. Description\n3. DateEcheance\n4. Priorite\n5. Statut\n");
+                    printf("Entrez le champ a modifier : ");
+                    scanf("%d", &field);
+                    printf("Entrez la nouvelle valeur : ");
+                    scanf(" %[^\n]", new_value);
+                    ModifierTache(&list_tache[id_modifier - 1], new_value, field);
+                } else {
+                    printf("ID invalide.\n");
+                }
+                break;
+            case 4:
+                printf("Entrez l'id de la tache a supprimer : ");
+                scanf("%d", &id_supprimer);
+                if (id_supprimer > 0 && id_supprimer <= id && list_tache[id_supprimer - 1].id != 0) {
+                    SupprimerTache(&list_tache[id_supprimer - 1]);
+                    printf("Tache supprimee avec succes.\n");
+                } else {
+                    printf("ID invalide.\n");
+                }
+                break;
+
+                case 5:
+                printf("Entrez la priorite a filtrer high or low : ");
+                scanf(" %s",filter_Priority);
+                FiltrerTaches(list_tache, id, filter_Priority);
+                break;
+            case 6:
+                printf("Goodbye!\n");
+                break;
+            default:
                 printf("Choix invalide. Veuillez reessayer.\n");
+                break;
         }
-    } while (choix != 6);// Boucle principale
-    return 0;// Fin du programme
+    } while (choix != 6);
+
+    return 0;
 }
